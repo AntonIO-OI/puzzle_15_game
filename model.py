@@ -10,14 +10,14 @@ class Puzzle:
 
     DIRECTIONS = [UP, DOWN, LEFT, RIGHT]
 
-    def __init__(self, boardSize=4, shuffle=True, level: int = 14):
-        self.boardSize = boardSize
-        self.board = [[0] * boardSize for i in range(boardSize)]
-        self.blankPos = (boardSize - 1, boardSize - 1)
+    def __init__(self, board_size=4, shuffle=True, level: int = 14):
+        self.boardSize = board_size
+        self.board = [[0] * board_size for i in range(board_size)]
+        self.blankPos = (board_size - 1, board_size - 1)
 
-        for i in range(boardSize):
-            for j in range(boardSize):
-                self.board[i][j] = i * boardSize + j + 1
+        for i in range(board_size):
+            for j in range(board_size):
+                self.board[i][j] = i * board_size + j + 1
 
         # 0 represents blank square, init in bottom right corner of board
         self.board[self.blankPos[0]][self.blankPos[1]] = 0
@@ -26,23 +26,16 @@ class Puzzle:
             self.level_shuffle(level)
 
     def __str__(self):
-        outStr = ""
+        out_string = ""
         for i in self.board:
-            outStr += "\t".join(map(str, i))
-            outStr += "\n"
-        return outStr
+            out_string += "\t".join(map(str, i))
+            out_string += "\n"
+        return out_string
 
     def __getitem__(self, key):
         return self.board[key]
 
-    # def shuffle(self):
-    #     nShuffles = 1000
-
-    #     for i in range(nShuffles):
-    #         dir = choice(self.DIRECTIONS)
-    #         self.move(dir)
-
-    def checkLevel(self):
+    def check_level(self):
         level_counter = 0
         for i in range(self.boardSize):
             for j in range(self.boardSize):
@@ -56,29 +49,29 @@ class Puzzle:
     def level_shuffle(self, level=14):
         self.__init__(shuffle=False)
 
-        while self.checkLevel() != level:
-            dir = choice(self.DIRECTIONS)
-            self.move(dir)
+        while self.check_level() != level:
+            direction = choice(self.DIRECTIONS)
+            self.move(direction)
 
-    def move(self, dir):
-        newBlankPos = (self.blankPos[0] + dir[0], self.blankPos[1] + dir[1])
+    def move(self, direction):
+        new_blank_pos = (self.blankPos[0] + direction[0], self.blankPos[1] + direction[1])
 
         if (
-            newBlankPos[0] < 0
-            or newBlankPos[0] >= self.boardSize
-            or newBlankPos[1] < 0
-            or newBlankPos[1] >= self.boardSize
+            new_blank_pos[0] < 0
+            or new_blank_pos[0] >= self.boardSize
+            or new_blank_pos[1] < 0
+            or new_blank_pos[1] >= self.boardSize
         ):
             return False
 
-        self.board[self.blankPos[0]][self.blankPos[1]] = self.board[newBlankPos[0]][
-            newBlankPos[1]
+        self.board[self.blankPos[0]][self.blankPos[1]] = self.board[new_blank_pos[0]][
+            new_blank_pos[1]
         ]
-        self.board[newBlankPos[0]][newBlankPos[1]] = 0
-        self.blankPos = newBlankPos
+        self.board[new_blank_pos[0]][new_blank_pos[1]] = 0
+        self.blankPos = new_blank_pos
         return True
 
-    def checkWin(self):
+    def check_win(self):
         for i in range(self.boardSize):
             for j in range(self.boardSize):
                 if (
@@ -90,24 +83,26 @@ class Puzzle:
         print("You win")
         return True
 
-    def hash(self, group={}):
+    def hash(self, group=None):
+        if group is None:
+            group = {}
         if not group:
             group = {s for s in range(self.boardSize**2)}
 
-        hashString = ["0"] * 2 * (self.boardSize**2)
+        hash_string = ["0"] * 2 * (self.boardSize**2)
 
         for i in range(self.boardSize):
             for j in range(self.boardSize):
                 if self[i][j] in group:
-                    hashString[2 * self[i][j]] = str(i)
-                    hashString[2 * self[i][j] + 1] = str(j)
+                    hash_string[2 * self[i][j]] = str(i)
+                    hash_string[2 * self[i][j] + 1] = str(j)
                 else:
-                    hashString[2 * self[i][j]] = "x"
-                    hashString[2 * self[i][j] + 1] = "x"
+                    hash_string[2 * self[i][j]] = "x"
+                    hash_string[2 * self[i][j] + 1] = "x"
 
-        return "".join(hashString).replace("x", "")
+        return "".join(hash_string).replace("x", "")
 
-    def simulateMove(self, dir):
-        simPuzzle = deepcopy(self)
+    def simulate_move(self, direction):
+        sim_puzzle = deepcopy(self)
 
-        return simPuzzle.move(dir), simPuzzle
+        return sim_puzzle.move(direction), sim_puzzle

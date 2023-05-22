@@ -53,7 +53,8 @@ class Menu(ctk.CTk):
 
     def on_window_close(self):
         if UI.instance:
-            UI.destroy(UI.instance)
-        if WinWindow.instance:
-            WinWindow.destroy(WinWindow.instance)
+            UI.instance.on_window_close()
+            # UI.destroy(UI.instance)
+        # if WinWindow.instance:
+        #     WinWindow.destroy(WinWindow.instance)
         self.destroy()

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
-import ai
+# import ai
+from ai import PuzzleSolver
 from model import Puzzle
 from ui_elements.button import IButtonNav
 from ui_elements.puzzle_initializer import PuzzleInitializer
@@ -50,7 +51,8 @@ class UI(ctk.CTk):
         self.next_move_value = ctk.CTkLabel(self.label_frame, text="", font=("Martel Sans", 20), text_color="#E76F51",
                                             width=80)
 
-        ai.init(self.puzzle.boardSize)
+        self.ai = PuzzleSolver(self.puzzle.boardSize)
+        # self.ai = ai.init(self.puzzle.boardSize)
         self.initialize_ui_elements()
         self.draw_game_field(self.puzzle)
         self.draw_label_field()
@@ -131,7 +133,10 @@ class UI(ctk.CTk):
             button = self.tile_frame.grid_slaves(row=pos[0] - direction[0], column=pos[1] - direction[1])[0]
             button.configure_text(text=text if text != "0" else "")
 
-        if puzzle.checkWin():
+        if puzzle.check_win():
+            if self.after_id:
+                self.after_cancel(self.after_id)
+                self.after_id = None
             WinWindow.create_window(self.moves_counter)
 
     def update(self):
@@ -153,7 +158,7 @@ class UI(ctk.CTk):
         self.update()
 
     def solve(self) -> None:
-        self.ai_moves = ai.idaStar(self.puzzle)
+        self.ai_moves = self.ai.ida_star(self.puzzle)
         self.ai_move_index = 0
 
     def make_correct_move(self) -> None:
@@ -185,8 +190,8 @@ class UI(ctk.CTk):
                 self.ai_moves[self.ai_move_index][1] + self.puzzle.blankPos[1],
             )
             self.make_move(self.puzzle, pos)
-            if self.ai_move_index < len(self.ai_moves) - 1:
-                self.update_next_move(aiMoves_dict[self.ai_moves[self.ai_move_index]])
+            # if self.ai_move_index < len(self.ai_moves) - 1:
+            #     self.update_next_move(aiMoves_dict[self.ai_moves[self.ai_move_index]])
 
     def update_moves_counter(self, counter: int) -> None:
         self.moves_value.configure(text=counter)
@@ -196,7 +201,7 @@ class UI(ctk.CTk):
 
     def on_window_close(self):
         self.animation_running = False
-        if self.after_id is not None:
+        if self.after_id:
             self.after_cancel(self.after_id)
         if WinWindow.instance:
             WinWindow.instance.on_window_close()
