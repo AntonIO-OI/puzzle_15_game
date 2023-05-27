@@ -10,9 +10,9 @@ class Puzzle:
 
     DIRECTIONS = [UP, DOWN, LEFT, RIGHT]
 
-    def __init__(self, board_size=4, shuffle=True, level: int = 14):
+    def __init__(self, board_size: int = 4, shuffle: bool = True, level: int = 14) -> None:
         self.boardSize = board_size
-        self.board = [[0] * board_size for i in range(board_size)]
+        self.board = [[0] * board_size for _ in range(board_size)]
         self.blankPos = (board_size - 1, board_size - 1)
 
         for i in range(board_size):
@@ -25,42 +25,42 @@ class Puzzle:
         if shuffle:
             self.level_shuffle(level)
 
-    def __str__(self):
+    def __str__(self) -> str:
         out_string = ""
         for i in self.board:
             out_string += "\t".join(map(str, i))
             out_string += "\n"
         return out_string
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int) -> list:
         return self.board[key]
 
-    def check_level(self):
+    def check_level(self) -> int:
         level_counter = 0
         for i in range(self.boardSize):
             for j in range(self.boardSize):
                 if (
-                    self.board[i][j] != i * self.boardSize + j + 1
-                    and self.board[i][j] != 0
+                        self.board[i][j] != i * self.boardSize + j + 1
+                        and self.board[i][j] != 0
                 ):
                     level_counter += 1
         return level_counter
 
-    def level_shuffle(self, level=14):
+    def level_shuffle(self, level: int = 14) -> None:
         self.__init__(shuffle=False)
 
         while self.check_level() != level:
             direction = choice(self.DIRECTIONS)
             self.move(direction)
 
-    def move(self, direction):
+    def move(self, direction: tuple) -> bool:
         new_blank_pos = (self.blankPos[0] + direction[0], self.blankPos[1] + direction[1])
 
         if (
-            new_blank_pos[0] < 0
-            or new_blank_pos[0] >= self.boardSize
-            or new_blank_pos[1] < 0
-            or new_blank_pos[1] >= self.boardSize
+                new_blank_pos[0] < 0
+                or new_blank_pos[0] >= self.boardSize
+                or new_blank_pos[1] < 0
+                or new_blank_pos[1] >= self.boardSize
         ):
             return False
 
@@ -71,25 +71,25 @@ class Puzzle:
         self.blankPos = new_blank_pos
         return True
 
-    def check_win(self):
+    def check_win(self) -> bool:
         for i in range(self.boardSize):
             for j in range(self.boardSize):
                 if (
-                    self.board[i][j] != i * self.boardSize + j + 1
-                    and self.board[i][j] != 0
+                        self.board[i][j] != i * self.boardSize + j + 1
+                        and self.board[i][j] != 0
                 ):
                     return False
 
         print("You win")
         return True
 
-    def hash(self, group=None):
+    def hash(self, group: dict = None) -> str:
         if group is None:
             group = {}
         if not group:
-            group = {s for s in range(self.boardSize**2)}
+            group = {s for s in range(self.boardSize ** 2)}
 
-        hash_string = ["0"] * 2 * (self.boardSize**2)
+        hash_string = ["0"] * 2 * (self.boardSize ** 2)
 
         for i in range(self.boardSize):
             for j in range(self.boardSize):
@@ -102,7 +102,7 @@ class Puzzle:
 
         return "".join(hash_string).replace("x", "")
 
-    def simulate_move(self, direction):
+    def simulate_move(self, direction: tuple) -> tuple:
         sim_puzzle = deepcopy(self)
 
         return sim_puzzle.move(direction), sim_puzzle

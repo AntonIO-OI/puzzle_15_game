@@ -1,9 +1,7 @@
 import customtkinter as ctk
 
-from ui_elements.win_window import WinWindow
+from config import level_dict
 from ui_elements.ui import UI
-
-level_dict = {f"Level #{i}": i for i in range(1, 15)}
 
 
 class Menu(ctk.CTk):
@@ -41,6 +39,7 @@ class Menu(ctk.CTk):
             button_hover_color="#2A9D8F",
         )
         self.combox.place(relx=0.5, rely=0.8, anchor=ctk.CENTER)
+        self.combox.set(str(list(level_dict.keys())[-1]))
 
         self.protocol("WM_DELETE_WINDOW", self.on_window_close)
 
@@ -54,7 +53,4 @@ class Menu(ctk.CTk):
     def on_window_close(self):
         if UI.instance:
             UI.instance.on_window_close()
-            # UI.destroy(UI.instance)
-        # if WinWindow.instance:
-        #     WinWindow.destroy(WinWindow.instance)
         self.destroy()

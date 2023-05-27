@@ -1,5 +1,6 @@
 from ui_elements.menu import Menu
 
 
-app = Menu()
-app.mainloop()
+if __name__ == "__main__":
+    app = Menu()
+    app.mainloop()

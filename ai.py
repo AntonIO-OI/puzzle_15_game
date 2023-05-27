@@ -120,7 +120,7 @@ class PuzzleSolver:
         if puzzle.check_win():
             return []
         if not self.patternDbDict:
-            self.init(puzzle.boardSize)
+            self.init(puzzle.board_size)
 
         t1 = perf_counter_ns()
         bound = self.h_score(puzzle)
@@ -179,11 +179,11 @@ class PuzzleSolver:
                 h += self.patternDbDict[g][hash_string]
             else:
                 print("No pattern found in DB, using Manhattan distance")
-                for i in range(puzzle.boardSize):
-                    for j in range(puzzle.boardSize):
+                for i in range(puzzle.board_size):
+                    for j in range(puzzle.board_size):
                         if puzzle[i][j] != 0 and puzzle[i][j] in group:
-                            dest_pos = ((puzzle[i][j] - 1) // puzzle.boardSize,
-                                        (puzzle[i][j] - 1) % puzzle.boardSize)
+                            dest_pos = ((puzzle[i][j] - 1) // puzzle.board_size,
+                                        (puzzle[i][j] - 1) % puzzle.board_size)
                             h += abs(dest_pos[0] - i)
                             h += abs(dest_pos[1] - j)
 

@@ -1,10 +1,10 @@
 class Window:
     def __init__(self, ui):
-        self.ui = ui
+        self.__ui = ui
 
     def initialize_window(self):
-        self.ui.geometry("900x600")
-        self.ui.resizable(False, False)
-        self.ui.configure(fg_color="#91D6CD")
-        self.ui.title("15 Puzzle")
-        self.ui.iconbitmap("./static/puzzle_icon.ico")
+        self.__ui.geometry("900x600")
+        self.__ui.resizable(False, False)
+        self.__ui.configure(fg_color="#91D6CD")
+        self.__ui.title("15 Puzzle")
+        self.__ui.iconbitmap("./static/puzzle_icon.ico")
