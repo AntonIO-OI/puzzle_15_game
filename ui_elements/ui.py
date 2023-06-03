@@ -1,4 +1,6 @@
 import customtkinter as ctk
+import os
+import pickle
 
 from ai import PuzzleSolver
 from config import aiMoves_dict
@@ -154,8 +156,11 @@ class UI(ctk.CTk):
         self.update()
 
     def solve(self) -> None:
-        self.__ai_moves = self.__ai.ida_star(self.__puzzle)
-        self.__ai_move_index = 0
+        if self.__puzzle.is_solvable():
+            self.__ai_moves = self.__ai.ida_star(self.__puzzle)
+            self.__ai_move_index = 0
+        else:
+            print("Puzzle is impossible to solve")
 
     def make_correct_move(self) -> None:
         if len(self.__ai_moves) == 0:

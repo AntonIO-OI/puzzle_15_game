@@ -83,6 +83,37 @@ class Puzzle:
         print("You win")
         return True
 
+    def is_solvable(self) -> bool:
+        # Flatten the board into a single list
+        flat_board = [number for row in self.board for number in row]
+
+        inversions = 0
+        for i in range(len(flat_board)):
+            for j in range(i + 1, len(flat_board)):
+                # Count the number of inversions
+                if flat_board[i] > flat_board[j] != 0:
+                    inversions += 1
+
+        # Check if the puzzle size is even
+        if self.boardSize % 2 == 0:
+            # If the blank is on an even row counting from the bottom and inversions are odd,
+            # or if the blank is on an odd row counting from the bottom and inversions are even,
+            # the puzzle is solvable
+            if (
+                    (self.blankPos[0] % 2 == 0 and inversions % 2 != 0) or
+                    (self.blankPos[0] % 2 != 0 and inversions % 2 == 0)
+            ):
+                print("Solvable")
+                return True
+        else:
+            # If the number of inversions is even, the puzzle is solvable
+            if inversions % 2 == 0:
+                print("Solvable")
+                return True
+
+        print("Not Solvable")
+        return False
+
     def hash(self, group: dict = None) -> str:
         if group is None:
             group = {}
